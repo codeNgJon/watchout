@@ -16,7 +16,7 @@ function randomPosition(){
   var position = [];
 
   for(var i=0; i<numEnemy; i++){
-    var style = {'x': Math.random()*500, 'y': Math.random()*500};
+    var style = {'x': Math.random()*800, 'y': Math.random()*700};
     position.push(style);
   }
 
@@ -39,7 +39,7 @@ d3.select('.player')
   .transition()
 
 var collisions = 0;
-var numEnemy = 7;
+var numEnemy = 6;
 var score=0;
 var highScore=0;
 
@@ -50,16 +50,24 @@ function checkCollision() {
   var playerX = d3.select(".player")[0][0].getAttribute('cx');
   var playerY = d3.select(".player")[0][0].getAttribute('cy');
 
-  var enemyR = 10;
-  var playerR = 10;
+  var enemyR = parseInt(d3.select(".enemy").style("width"))/2;
+  var playerR = parseInt(d3.select(".player")[0][0].getAttribute('r'));
 
   var radiusSum = enemyR + playerR;
 
-  for(var i = 0; i<enemyX.length; i++){
+  // //////////debug////////////
+  // console.log("xArray: "+ enemyX);
+  // console.log("yArray: " + enemyY);
+  // console.log('playerX: '+ playerX + ' playerY: '+ playerY);
+  // console.log('enemyR: '+enemyR + ' playerR: ' + playerR);
+
+  for(var i = 0; i<numEnemy; i++){
     var distanceX = Math.pow(Math.abs(enemyX[i] - playerX), 2);
     var distanceY = Math.pow(Math.abs(enemyY[i] - playerY), 2);
     var distance = Math.sqrt(distanceX + distanceY);
-    console.log("Distance: " + distance + " " + radiusSum);
+
+    // console.log("Distance: " + distance + " " + radiusSum);
+
     if(distance < radiusSum){
       if(score > highScore){
         highScore = score;
@@ -77,25 +85,25 @@ function checkCollision() {
 
  function checkX () {
   var xArray = [];
-  var enemy = d3.select("svg").selectAll(".enemy");
+  var enemy = d3.selectAll(".enemy");
 
-  for(var i=0; i<enemy[0].length; i++){
-    xArray.push(enemy[0][i].getAttribute('left'));
-  }
+    d3.selectAll(".enemy").each(function(){
+    xArray.push(parseInt(d3.select(this).style('left')))})
 
   return xArray;
  }
 
 function checkY () {
   var yArray = [];
-  var enemy = d3.select("svg").selectAll(".enemy");
+  var enemy = d3.selectAll(".enemy");
 
-  for(var i=0; i<enemy[0].length; i++){
-    yArray.push(enemy[0][i].getAttribute('top'));
-  }
+  d3.selectAll(".enemy").each(function(){
+    yArray.push(parseInt(d3.select(this).style('top')))})
 
   return yArray;
  }
+
+ checkY();
 
  function countScore () {
   score ++;

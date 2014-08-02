@@ -14,7 +14,7 @@ div.image{
   position:absolute;
   content:url(shuriken.gif);
   height:50px;
-  width:50px;
+  width:50;
   top:100px;
   left:100px;
 /*  transform:rotate(90deg);
