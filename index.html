@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel='stylesheet' type='css' href='styles.css'> 
+    <link rel='stylesheet' type='css' href='styles.css'>
   </head>
   <body>
     <div class="scoreboard">
@@ -10,8 +10,23 @@
       <div class="current">Current score: <span>0</span></div>
       <div class="collisions">Collisions: <span>0</span></div>
     </div>
+
+    <svg width="700" height="450">
+
+    <!-- drawing elements to go here -->
+        <circle class="enemy" cx="20" cy="30" r="10" stroke="#909" stroke-width="0" fill="#008B8B" />
+        <circle class="enemy" cx="40" cy="30" r="10" stroke="#909" stroke-width="0" fill="#008B8B" />
+        <circle class="enemy" cx="60" cy="30" r="10" stroke="#909" stroke-width="0" fill="#008B8B" />
+        <circle class="enemy" cx="80" cy="30" r="10" stroke="#909" stroke-width="0" fill="#008B8B" />
+
+        <circle class="player" cx="50" cy="50" r="10" stroke="#909" stroke-width="0" fill="#000" />
+
+    </svg>
+
     <script src="d3.js" charset="utf-8"></script>
-    <script src='vid.js'></script>
+    <!-- <script src='vid.js'></script> -->
     <script src='watchout.js'></script>
   </body>
 </html>
+
+<!-- viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet" -->
