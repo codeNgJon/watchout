@@ -3,40 +3,86 @@
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
 
-.player{
-    position: absolute;
-    display: inline-block;
-    height:0;
-    width:0;
+body{
+  background:url(background.jpg) no-repeat;
+  background-size:cover;
 }
+div.player{
+  position:absolute;
+  content:url(ninja.svg);
+  height:50px;
+  width:50px;
+  top:500px;
+  left:925px;
+}
+
 
 div.image{
   position:absolute;
   content:url(shuriken.gif);
   height:50px;
-  width:50;
-  top:100px;
-  left:100px;
-/*  transform:rotate(90deg);
--ms-transform:rotate(90deg);
--webkit-transform:rotate(90deg);*/
-
-/*      transform: rotate(360deg);
-    -webkit-transform: rotate(360deg);
-  transition: transform 1s;
-    -webkit-transition: -webkit-transform 1s;*/
-
+  width:50px;
+  top: 250px;
+  left: 925px;
   -webkit-animation-name: rotate;
-  -webkit-animation-duration:2s;
+  -webkit-animation-duration:1s;
   -webkit-animation-iteration-count:infinite;
   -webkit-animation-timing-function:linear;
 }
 
 @-webkit-keyframes rotate {
-  from {
-    -webkit-transform: rotate(0deg);
-  }
-  to {
-    -webkit-transform: rotate(360deg);
-  }
+  from { webkit-transform: rotate(360deg); }
+  to { -webkit-transform: rotate(0deg); }
+}
+
+div.kunai{
+  position:absolute;
+  content:url(kunai.png);
+  height:50px;
+  width:50px;
+  top: 250px;
+  left: 925px;
+
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration:1s;
+  -webkit-animation-iteration-count:infinite;
+  -webkit-animation-timing-function:linear;
+}
+
+@-webkit-keyframes rotate {
+  from { webkit-transform: rotate(0deg); }
+  to { -webkit-transform: rotate(360deg); }
+}
+
+div.fireball{
+  position:absolute;
+  content:url(fireball.png);
+  height:50px;
+  width:50px;
+  top: 250px;
+  left: 925px;
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration:1s;
+  -webkit-animation-iteration-count:infinite;
+  -webkit-animation-timing-function:linear;
+}
+
+@-webkit-keyframes rotate {
+  from { webkit-transform: rotate(0deg); }
+  to { -webkit-transform: rotate(360deg); }
+}
+
+
+.scoreboard{
+  position:absolute;
+  background-color:rgba(255,255,255,0.5);
+  height: 100px;
+  font: sans-serif;
+}
+
+.game {
+  position:absolute;
+  top:200px;
+  left:225px;
+  background-color:rgba(255,255,255,0.5);
 }

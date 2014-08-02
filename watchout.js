@@ -1,36 +1,59 @@
-// start slingin' some d3 here.
+// // start slingin' some d3 here.
 
-function move() {
+//  d3.select(".player")
+//    .data(["url(ninja.svg)"])
+//      .style('content', function(d){return d})
 
- d3.selectAll(".enemy")
+////////////global variables////////////////////
+
+var collisions = 0;
+var numEnemy = d3.selectAll(".enemy")[0].length;
+var score = 0;
+var highScore = 0;
+
+function move(object){
+ d3.selectAll(object)
   .data(randomPosition())
-    .transition('slow')
+    .transition()
       .style({
-        top:function(d){return d.x + "px"},
-        left:function(d){return d.y + "px"}
+        top:function(d){return d.y + "px"},
+        left:function(d){return d.x + "px"}
       });
 }
 
 
+// d3.selectAll(".fireball")
+// .data([{'duration':3000}])
+//   .transition()
+//     .duration(function(d){return d.duration})
+
+
 function randomPosition(){
   var position = [];
-
+  var yOffset = parseInt(d3.select('.game').style("top"));
+  var xOffset = parseInt(d3.select('.game').style("left"));
   for(var i=0; i<numEnemy; i++){
-    var style = {'x': Math.random()*800, 'y': Math.random()*700};
+    var style = {'x': xOffset+Math.random()*1450, 'y': yOffset+ Math.random()*550};
     position.push(style);
   }
-
   return position;
 }
 
-function dragmove(){
-  d3.select(this)
-    .attr("cx", ((d3.event.sourceEvent.pageX) - this.offsetWidth/2))
-    .attr("cy", ((d3.event.sourceEvent.pageY) - this.offsetHeight/2))
+///////////////////Drag behavior//////////////////////
+
+function dragmove(thing){
+  d3.select(thing)
+    .style("left",((d3.event.sourceEvent.pageX) - thing.offsetWidth/2)+"px")
+    .style("top", ((d3.event.sourceEvent.pageY) - thing.offsetHeight/2)+"px")
 }
 
+
 var drag = d3.behavior.drag()
-  .on("drag", dragmove)
+  .on("drag", function(){
+    if(!dragEnd()){
+      dragmove(this);
+    }
+  })
 
 d3.select(".player")
   .call(drag)
@@ -38,20 +61,36 @@ d3.select(".player")
 d3.select('.player')
   .transition()
 
-var collisions = 0;
-var numEnemy = 6;
-var score=0;
-var highScore=0;
+////////////////////////dragEnd/////////////////////
+var dragEnd = function(){
+  var playerX = parseInt(d3.select(".player").style('left'));
+  var playerY = parseInt(d3.select(".player").style('top'));
 
+  var boardXmax = parseInt(d3.select(".game").style("left")) + parseInt(d3.select(".game").style(".width"));
+  var boardXmin = parseInt(d3.select(".game").style("left"));
+  var boardYmax = parseInt(d3.select(".game").style("top")) + parseInt(d3.select(".game").style(".height"));
+  var boardYmin = parseInt(d3.select(".game").style("top"));
+
+  if(playerX > boardXmax || playerX < boardXmin){
+    return true;
+  }else if( playerY > boardYmax || playerY < boardYmin){
+   return true;
+  }else{
+    return false;}
+}
+//setInterval(dragEnd, 10);
+
+
+////////collision///////////////
 function checkCollision() {
   var enemyX = checkX();
   var enemyY = checkY();
 
-  var playerX = d3.select(".player")[0][0].getAttribute('cx');
-  var playerY = d3.select(".player")[0][0].getAttribute('cy');
+  var playerX = parseInt(d3.select(".player").style('left'));
+  var playerY = parseInt(d3.select(".player").style('top'));
 
   var enemyR = parseInt(d3.select(".enemy").style("width"))/2;
-  var playerR = parseInt(d3.select(".player")[0][0].getAttribute('r'));
+  var playerR = parseInt(d3.select(".player").style("width"))/2;
 
   var radiusSum = enemyR + playerR;
 
@@ -66,9 +105,8 @@ function checkCollision() {
     var distanceY = Math.pow(Math.abs(enemyY[i] - playerY), 2);
     var distance = Math.sqrt(distanceX + distanceY);
 
-    // console.log("Distance: " + distance + " " + radiusSum);
-
     if(distance < radiusSum){
+      d3.select(".game").style("background-color","red");
       if(score > highScore){
         highScore = score;
         d3.select(".high").select("span").text(highScore);
@@ -77,41 +115,42 @@ function checkCollision() {
       collisions++;
       d3.select(".collisions").select("span").text(collisions);
       d3.select(".current").select("span").text(0);
-    }
+    } else {
+    d3.select(".game").style("background-color", "rgba(255,255,255,0.5)");
+   }
   }
-
 }
 
-
+/// general function for checking horizontal x for enemies
  function checkX () {
   var xArray = [];
   var enemy = d3.selectAll(".enemy");
 
-    d3.selectAll(".enemy").each(function(){
+  d3.selectAll(".enemy").each(function(){
     xArray.push(parseInt(d3.select(this).style('left')))})
+    return xArray;
+  }
 
-  return xArray;
- }
-
+// general function for checking vertical y for enemies
 function checkY () {
   var yArray = [];
   var enemy = d3.selectAll(".enemy");
 
   d3.selectAll(".enemy").each(function(){
     yArray.push(parseInt(d3.select(this).style('top')))})
+    return yArray;
+  }
 
-  return yArray;
- }
-
- checkY();
-
+// keeping score
  function countScore () {
-  score ++;
+  score++;
   d3.select(".current").select("span").text(score);
  }
 
 setInterval(countScore,100);
 setInterval(checkCollision,100);
-setInterval(move, 1000);
+setInterval(function(){ return move(".image")},1000);
+setInterval(function(){ return move(".kunai")},700);
+setInterval(function(){ return move(".fireball")},1200)
 
 
