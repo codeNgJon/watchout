@@ -27,8 +27,8 @@ function randomPosition(){
 
 function dragmove(){
   d3.select(this)
-    .attr("cx", ((d3.event.sourceEvent.pageX) - this.offsetWidth/2)+"px")
-    .attr("cy", ((d3.event.sourceEvent.pageY) - this.offsetHeight/2)+"px")
+    .attr("cx", ((d3.event.sourceEvent.pageX) - this.offsetWidth/2))
+    .attr("cy", ((d3.event.sourceEvent.pageY) - this.offsetHeight/2))
 }
 
 var drag = d3.behavior.drag()
@@ -40,11 +40,12 @@ d3.select(".player")
 
 d3.select('.player')
   .transition()
-  .tween('custom', checkCollision);
 
-
-var collision = false;
+//////////////GLOBAL VARIABLES//////////////
+var collisions = 0;
 var numEnemy = 4;
+var score=0;
+var highScore=0;
 
 function checkCollision() {
   var enemyX = checkX();
@@ -53,11 +54,43 @@ function checkCollision() {
   var playerX = d3.select(".player")[0][0].getAttribute('cx');
   var playerY = d3.select(".player")[0][0].getAttribute('cy');
 
-  console.log("enemyX: "+ enemyX);
+//////////////// GET RADIUS DYNAMICALLY!!//////////////
+  var enemyR = 10;
+  var playerR = 10;
+
+  var radiusSum = enemyR + playerR;
+
+/////////////////DELETE THIS!!////////////////////////
+  /*console.log("enemyX: "+ enemyX);
   console.log("enemyY: "+ enemyY);
 
   console.log("playerX: "+ playerX);
   console.log("playerY: "+ playerY);
+
+  console.log("sum of radius: "+radiusSum);*/
+
+  //check for collisions
+  for(var i = 0; i<enemyX.length; i++){
+    var distanceX = Math.pow(Math.abs(enemyX[i] - playerX), 2);
+    var distanceY = Math.pow(Math.abs(enemyY[i] - playerY), 2);
+    var distance = Math.sqrt(distanceX + distanceY);
+    console.log("Distance: " + distance + " " + radiusSum);
+    if(distance < radiusSum){
+      if(score > highScore){
+        highScore = score;
+        d3.select(".high").select("span").text(highScore);
+      }
+      score = 0;
+      collisions++;
+      d3.select(".collisions").select("span").text(collisions);
+      d3.select(".current").select("span").text(0);
+    } else{
+        //fill in later
+    }
+
+  }
+
+
 }
 
 
@@ -83,7 +116,14 @@ function checkY () {
   return yArray;
  }
 
-setInterval(checkCollision,1000);
+ function countScore () {
+  score ++;
+  d3.select(".current").select("span").text(score);
+  console.log(score);
+ }
+
+setInterval(countScore,100);
+setInterval(checkCollision,100);
 setInterval(move, 1000);
 
 
