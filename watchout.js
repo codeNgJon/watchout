@@ -1,23 +1,21 @@
 // start slingin' some d3 here.
 
-function move(){
-  var position = randomPosition();
+function move() {
 
-  d3.select("svg").selectAll(".enemy")
-  .data(position)
-    .transition()
-      .attr({
-        cx: function(d){return d.x},
-        cy: function(d){return d.y}
+ d3.selectAll(".enemy")
+  .data(randomPosition())
+    .transition('slow')
+      .style({
+        top:function(d){return d.x + "px"},
+        left:function(d){return d.y + "px"}
       });
-
 }
+
 
 function randomPosition(){
   var position = [];
 
-  //return css object
-  for(var i=0; i<4; i++){
+  for(var i=0; i<numEnemy; i++){
     var style = {'x': Math.random()*500, 'y': Math.random()*500};
     position.push(style);
   }
@@ -32,18 +30,16 @@ function dragmove(){
 }
 
 var drag = d3.behavior.drag()
-  .on("drag", dragmove);
+  .on("drag", dragmove)
 
 d3.select(".player")
   .call(drag)
 
-
 d3.select('.player')
   .transition()
 
-//////////////GLOBAL VARIABLES//////////////
 var collisions = 0;
-var numEnemy = 4;
+var numEnemy = 7;
 var score=0;
 var highScore=0;
 
@@ -54,22 +50,11 @@ function checkCollision() {
   var playerX = d3.select(".player")[0][0].getAttribute('cx');
   var playerY = d3.select(".player")[0][0].getAttribute('cy');
 
-//////////////// GET RADIUS DYNAMICALLY!!//////////////
   var enemyR = 10;
   var playerR = 10;
 
   var radiusSum = enemyR + playerR;
 
-/////////////////DELETE THIS!!////////////////////////
-  /*console.log("enemyX: "+ enemyX);
-  console.log("enemyY: "+ enemyY);
-
-  console.log("playerX: "+ playerX);
-  console.log("playerY: "+ playerY);
-
-  console.log("sum of radius: "+radiusSum);*/
-
-  //check for collisions
   for(var i = 0; i<enemyX.length; i++){
     var distanceX = Math.pow(Math.abs(enemyX[i] - playerX), 2);
     var distanceY = Math.pow(Math.abs(enemyY[i] - playerY), 2);
@@ -84,12 +69,8 @@ function checkCollision() {
       collisions++;
       d3.select(".collisions").select("span").text(collisions);
       d3.select(".current").select("span").text(0);
-    } else{
-        //fill in later
     }
-
   }
-
 
 }
 
@@ -99,7 +80,7 @@ function checkCollision() {
   var enemy = d3.select("svg").selectAll(".enemy");
 
   for(var i=0; i<enemy[0].length; i++){
-    xArray.push(enemy[0][i].getAttribute('cx'));
+    xArray.push(enemy[0][i].getAttribute('left'));
   }
 
   return xArray;
@@ -110,7 +91,7 @@ function checkY () {
   var enemy = d3.select("svg").selectAll(".enemy");
 
   for(var i=0; i<enemy[0].length; i++){
-    yArray.push(enemy[0][i].getAttribute('cy'));
+    yArray.push(enemy[0][i].getAttribute('top'));
   }
 
   return yArray;
@@ -119,7 +100,6 @@ function checkY () {
  function countScore () {
   score ++;
   d3.select(".current").select("span").text(score);
-  console.log(score);
  }
 
 setInterval(countScore,100);

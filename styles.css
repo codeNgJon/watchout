@@ -9,3 +9,34 @@ Feel free to use it if you like. */
     height:0;
     width:0;
 }
+
+div.image{
+  position:absolute;
+  content:url(shuriken.gif);
+  height:50px;
+  width:50px;
+  top:100px;
+  left:100px;
+/*  transform:rotate(90deg);
+-ms-transform:rotate(90deg);
+-webkit-transform:rotate(90deg);*/
+
+/*      transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  transition: transform 1s;
+    -webkit-transition: -webkit-transform 1s;*/
+
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration:2s;
+  -webkit-animation-iteration-count:infinite;
+  -webkit-animation-timing-function:linear;
+}
+
+@-webkit-keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
