@@ -1,9 +1,5 @@
 // // start slingin' some d3 here.
 
-//  d3.select(".player")
-//    .data(["url(ninja.svg)"])
-//      .style('content', function(d){return d})
-
 ////////////global variables////////////////////
 
 var collisions = 0;
@@ -14,18 +10,12 @@ var highScore = 0;
 function move(object){
  d3.selectAll(object)
   .data(randomPosition())
-    .transition()
+    .transition().ease('cubic-in-out')
       .style({
         top:function(d){return d.y + "px"},
         left:function(d){return d.x + "px"}
       });
 }
-
-
-// d3.selectAll(".fireball")
-// .data([{'duration':3000}])
-//   .transition()
-//     .duration(function(d){return d.duration})
 
 
 function randomPosition(){
@@ -41,19 +31,9 @@ function randomPosition(){
 
 ///////////////////Drag behavior//////////////////////
 
-function dragmove(thing){
-  d3.select(thing)
-    .style("left",((d3.event.sourceEvent.pageX) - thing.offsetWidth/2)+"px")
-    .style("top", ((d3.event.sourceEvent.pageY) - thing.offsetHeight/2)+"px")
-}
-
 
 var drag = d3.behavior.drag()
-  .on("drag", function(){
-    if(!dragEnd()){
-      dragmove(this);
-    }
-  })
+  .on("drag", dragmove)
 
 d3.select(".player")
   .call(drag)
@@ -62,24 +42,30 @@ d3.select('.player')
   .transition()
 
 ////////////////////////dragEnd/////////////////////
-var dragEnd = function(){
+function dragmove(){
   var playerX = parseInt(d3.select(".player").style('left'));
   var playerY = parseInt(d3.select(".player").style('top'));
 
-  var boardXmax = parseInt(d3.select(".game").style("left")) + parseInt(d3.select(".game").style(".width"));
+  var boardXmax = parseInt(d3.select(".game").style("left")) + parseInt(d3.select(".game").style("width"));
   var boardXmin = parseInt(d3.select(".game").style("left"));
-  var boardYmax = parseInt(d3.select(".game").style("top")) + parseInt(d3.select(".game").style(".height"));
+  var boardYmax = parseInt(d3.select(".game").style("top")) + parseInt(d3.select(".game").style("height"));
   var boardYmin = parseInt(d3.select(".game").style("top"));
 
-  if(playerX > boardXmax || playerX < boardXmin){
-    return true;
-  }else if( playerY > boardYmax || playerY < boardYmin){
-   return true;
-  }else{
-    return false;}
-}
-//setInterval(dragEnd, 10);
+  console.log(" playerX: "+ playerX + " playerY: "+playerY + " boardXmax: "+ boardXmax
+              +" boardXmin: "+ boardXmin + " boardYmax: "+ boardYmax + " boardYmin: "+boardYmin);
 
+  if(playerX < boardXmax && playerX > boardXmin &&
+     playerY < boardYmax && playerY > boardYmin)
+  {
+  d3.select(this)
+    .style("left",((d3.event.sourceEvent.pageX) - this.offsetWidth/2)+"px")
+    .style("top", ((d3.event.sourceEvent.pageY) - this.offsetHeight/2)+"px")
+  } else {
+      d3.select(this)
+      .style("left",925+"px")
+      .style("top", 500+"px")
+  }
+}
 
 ////////collision///////////////
 function checkCollision() {
@@ -106,7 +92,7 @@ function checkCollision() {
     var distance = Math.sqrt(distanceX + distanceY);
 
     if(distance < radiusSum){
-      d3.select(".game").style("background-color","red");
+      d3.select(".game").style("background-color","rgba(255,51,51,0.5)");
       if(score > highScore){
         highScore = score;
         d3.select(".high").select("span").text(highScore);
